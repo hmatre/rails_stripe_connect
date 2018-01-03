@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :add_to_cart]
   before_action :check_user_owns_product, only: [:edit, :update, :destroy]
-  skip_before_action :authenticate_user!, only: [:show]
+  skip_before_action :authenticate_user!, only: [:show, :add_to_cart, :cart_items]
 
   # GET /products
   # GET /products.json
@@ -64,6 +64,17 @@ class ProductsController < ApplicationController
       format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # products add to cart
+  def add_to_cart
+    session[:cart] ||= []
+    session[:cart] << @product
+    redirect_to product_path(params[:id])
+  end
+  # get cart items
+  def cart_items
+    @products = Product.get_cart_items(session[:cart])
   end
 
   private

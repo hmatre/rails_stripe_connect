@@ -2,7 +2,7 @@
 <p>Try incognito window to simulate a buyer</p>
 <hr>
 
-<p id="notice"><%= notice %></p>
+<p id="notice"><%#= notice %></p>
 
 <p>
   <strong>Title:</strong>
@@ -19,8 +19,12 @@
   <%= @product.price %>
 </p>
 
+<p>
+  <%= link_to 'Add to cart', add_to_cart_products_path(id: @product.id) %>
+</p>
+
 <%= form_with(url: '/checkout', local: true) do |form| %>
-  <%= hidden_field_tag(:product_id, @product.id) %>
+  <%= hidden_field_tag 'products[]', @product.id %>
   <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
             data-description="<%= @product.title %>"
